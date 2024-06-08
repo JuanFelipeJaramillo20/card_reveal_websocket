@@ -2,11 +2,11 @@ export class MemoryGame {
   constructor() {
     this.players = [];
     this.grid = this.initializeGrid();
-    this.turn = 0; // Index of the current player
+    this.turn = 0;
     this.flippedCards = [];
     this.scores = {};
     this.matchedPairs = new Set();
-    this.movesCount = 0; // Track the number of moves in the current turn
+    this.movesCount = 0;
   }
 
   restart() {

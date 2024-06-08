@@ -22,7 +22,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("start", () => {
-    game.turn = 0; // Start the game with the first player
+    game.turn = 0;
   });
 
   socket.on("restart", () => {
@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
     } else if (result) {
       io.emit("gameState", game.getGameState());
     } else {
-      socket.emit("gameState", game.getGameState()); // Emit current game state even if no valid flip
+      socket.emit("gameState", game.getGameState());
     }
   });
 
@@ -52,7 +52,6 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
-    // Optionally handle player disconnection (e.g., remove player, end game)
   });
 });
 
