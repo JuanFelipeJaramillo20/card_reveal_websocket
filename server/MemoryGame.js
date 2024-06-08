@@ -2,16 +2,27 @@ export class MemoryGame {
   constructor() {
     this.players = [];
     this.grid = this.initializeGrid();
+    this.turn = 0; // Index of the current player
+    this.flippedCards = [];
+    this.scores = {};
+    this.matchedPairs = new Set();
+    this.movesCount = 0; // Track the number of moves in the current turn
+  }
+
+  restart() {
+    this.players = [];
+    this.grid = this.initializeGrid();
     this.turn = 0;
     this.flippedCards = [];
     this.scores = {};
     this.matchedPairs = new Set();
+    this.movesCount = 0;
   }
 
   initializeGrid() {
     const cards = [];
-    for (let i = 1; i <= 10; i++) {
-      cards.push(i, i);
+    for (let i = 1; i <= 4; i++) {
+      cards.push({ number: i, found: false }, { number: i, found: false });
     }
     return this.shuffle(cards);
   }
@@ -24,37 +35,49 @@ export class MemoryGame {
     return array;
   }
 
-  addPlayer(playerId) {
-    this.players.push(playerId);
-    this.scores[playerId] = 0;
+  addPlayer(username) {
+    this.players.push(username);
+    this.scores[username] = 0;
   }
 
   flipCard(playerId, index) {
     if (
       this.players[this.turn] !== playerId ||
       this.flippedCards.length >= 2 ||
-      this.matchedPairs.has(index)
+      this.grid[index].found
     ) {
       return false;
     }
 
     this.flippedCards.push(index);
+    this.movesCount++;
+    console.log(
+      "flipped cards",
+      this.flippedCards,
+      this.getCardValue(this.flippedCards[0]),
+      this.getCardValue(this.flippedCards[1]),
+      this.players,
+      this.turn
+    );
 
     if (this.flippedCards.length === 2) {
       const [first, second] = this.flippedCards;
-      if (this.grid[first] === this.grid[second]) {
+      if (this.grid[first].number === this.grid[second].number) {
         this.scores[playerId]++;
         this.matchedPairs.add(first);
         this.matchedPairs.add(second);
+        this.grid[first].found = true;
+        this.grid[second].found = true;
         this.flippedCards = [];
+        this.movesCount = 0;
 
         if (this.isGameOver()) {
           return "gameOver";
         }
       } else {
-        this.turn = (this.turn + 1) % this.players.length;
         setTimeout(() => {
           this.flippedCards = [];
+          this.changeTurn();
         }, 1000);
       }
     }
@@ -62,7 +85,13 @@ export class MemoryGame {
     return true;
   }
 
+  changeTurn() {
+    this.turn = (this.turn + 1) % this.players.length;
+    this.movesCount = 0;
+  }
+
   isGameOver() {
+    console.log("ENCONTRADAS", this.matchedPairs, "TOTAL", this.grid.length);
     return this.matchedPairs.size === this.grid.length;
   }
 
