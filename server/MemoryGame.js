@@ -81,4 +81,8 @@ export class MemoryGame {
       (playerId) => this.scores[playerId] === maxScore
     );
   }
+
+  getCardValue(index) {
+    return this.grid[index];
+  }
 }

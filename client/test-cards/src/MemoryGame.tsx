@@ -31,6 +31,12 @@ const MemoryGame = ({ socket }) => {
     socket.emit("flipCard", index);
   };
 
+  const getCardValue = (index) => {
+    socket.emit("getCardValue", index, (value) => {
+      console.log(`Card value at index ${index}:`, value);
+    });
+  };
+
   return (
     <div>
       {gameOver ? (

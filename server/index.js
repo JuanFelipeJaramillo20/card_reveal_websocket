@@ -29,6 +29,11 @@ io.on("connection", (socket) => {
       }
     });
 
+    socket.on("getCardValue", (index, callback) => {
+      const value = game.getCardValue(index);
+      callback(value);
+    });
+
     socket.on("disconnect", () => {
       console.log("user disconnected");
       // TODO: Optionally handle player disconnection (e.g., remove player, end game)
