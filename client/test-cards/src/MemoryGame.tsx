@@ -1,18 +1,17 @@
-// src/MemoryGame.js
 import { useEffect, useState } from "react";
 
 const MemoryGame = ({ socket }) => {
   const [gameState, setGameState] = useState(null);
   const [gameOver, setGameOver] = useState(false);
   const [winners, setWinners] = useState([]);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     if (socket) {
       socket.on("gameState", (state) => {
         console.log("gameState", state);
-
         setGameState(state);
-        setGameOver(false); // Reset game over flag on new game state
+        setGameOver(false);
       });
 
       socket.on("gameOver", ({ winners, scores }) => {
@@ -37,6 +36,16 @@ const MemoryGame = ({ socket }) => {
     });
   };
 
+  const handleRegister = () => {
+    if (username.trim() !== "") {
+      socket.emit("register", username);
+    }
+  };
+
+  const handleRestart = () => {
+    socket.emit("restart");
+  };
+
   return (
     <div>
       {gameOver ? (
@@ -51,19 +60,30 @@ const MemoryGame = ({ socket }) => {
           <button
             key={index}
             onClick={() => flipCard(index)}
-            disabled={
-              gameState.flippedCards.includes(index) ||
-              gameState.matchedPairs?.includes(index)
-            }
+            disabled={card.found || gameState.flippedCards.includes(index)}
           >
-            {gameState.flippedCards.includes(index) ||
-            gameState.matchedPairs?.includes(index)
-              ? card
+            {card.found || gameState.flippedCards.includes(index)
+              ? card.number
               : "?"}
           </button>
         ))
       )}
       <div>
+        <h2>Register</h2>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <button onClick={handleRegister}>Register</button>
+        <button onClick={handleRestart}>Restart</button>
+        <button
+          onClick={() => {
+            socket.emit("start");
+          }}
+        >
+          Start Game
+        </button>
         <h3>Scores</h3>
         {Object.entries(gameState?.scores || {}).map(([player, score]) => (
           <p key={player}>

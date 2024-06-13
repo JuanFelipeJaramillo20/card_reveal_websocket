@@ -10,10 +10,6 @@ function App() {
     socket.on("connection", (socket) => {
       console.log(socket);
     });
-
-    socket.on("gameState", (state) => {
-      console.log("gameState", state);
-    });
   }
 
   useEffect(() => {
