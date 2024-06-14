@@ -63,7 +63,7 @@ const MemoryGame = ({ socket }) => {
             disabled={card.found || gameState.flippedCards.includes(index)}
           >
             {card.found || gameState.flippedCards.includes(index)
-              ? card.number
+              ? card.symbol
               : "?"}
           </button>
         ))
