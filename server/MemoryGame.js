@@ -20,9 +20,29 @@ export class MemoryGame {
   }
 
   initializeGrid() {
+    const emojis = [
+      "😀",
+      "😃",
+      "😄",
+      "😁",
+      "😆",
+      "🥵",
+      "😈",
+      "🙈",
+      "🍆",
+      "😇",
+      "🙂",
+      "🙃",
+      "😉",
+      "😌",
+      "😍",
+    ];
     const cards = [];
-    for (let i = 1; i <= 4; i++) {
-      cards.push({ number: i, found: false }, { number: i, found: false });
+    for (let emoji of emojis) {
+      cards.push(
+        { symbol: emoji, found: false },
+        { symbol: emoji, found: false }
+      );
     }
     return this.shuffle(cards);
   }
@@ -62,7 +82,7 @@ export class MemoryGame {
 
     if (this.flippedCards.length === 2) {
       const [first, second] = this.flippedCards;
-      if (this.grid[first].number === this.grid[second].number) {
+      if (this.grid[first].symbol === this.grid[second].symbol) {
         this.scores[playerId]++;
         this.matchedPairs.add(first);
         this.matchedPairs.add(second);
@@ -81,7 +101,6 @@ export class MemoryGame {
         }, 1000);
       }
     }
-
     return true;
   }
 
