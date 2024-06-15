@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import io from "socket.io-client";
 import "./App.css";
 import MemoryGame from "./MemoryGame";
 
 function App() {
-  const socket = io("localhost:3000");
+  const socket = io("http://localhost:3000");
 
   function connectSocket() {
     socket.on("connection", (socket) => {
